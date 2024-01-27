@@ -1,46 +1,50 @@
-#include "NumClass.h"
+#include <stdio.h>
+#include "NumClass.h" 
 
-/* 
-will return 0 if false and 1 if true
-*/
 
-int Power(int num, int power){
+//////////////////// is palindrome//////////////////
+
+int digitCount(int number){
+
+    if (number == 0)
+    {
+        return 0;
+    }
+    //
+    return 1 + digitCount(number / 10);
+}
+
+int powerNRec(int number, int n){
+    if (n > 0)
+    {
+        return (number * powerNRec(number, n-1));
+    }
+    return 1;
+}
+
+int isPalindrome(int number){
+    if (digitCount(number) <= 1)
+    {
+        return 1;
+    }
     
-   if(power == 0) return 1;
+    int firstDigit = number / powerNRec(10, (digitCount(number))-1);
+    int lastDigit = number % 10;
 
-   return num * Power(num, power-1);
-}
-
-int digitCount(int num){
-
-    if(num == 0) return 0;
-
-    return digitCount(num/10)+1;
-}
-
-int isPalindromeHelper(int num, int digits){
-
-    if(digits<2) return 1;
-    int dis = Power(10,digits-1);
-    int lastD = num%10;
-    int firstD = (num - (num % dis))/dis;
-    if(firstD != lastD) return 0;
-
-    return isPalindromeHelper(((num % dis)/10), digits - 2);
-}
-
-
-int isPalindrome(int num){
+    if (firstDigit != lastDigit)
+    {
+        return 0;
+    }
     
-    int numOfDigits = digitCount(num);
-    return(isPalindromeHelper(num,numOfDigits));
+    return isPalindrome((number % powerNRec(10, digitCount(number)-1))/10);
 }
+/////////////////////// isArmstrong ///////////////////////
 
 int isArmstrongHelper(int num, int digits){
 
     if(num == 0) return 0;
 
-    return Power(num % 10, digits) + isArmstrongHelper(num/10,digits);
+    return powerNRec(num % 10, digits) + isArmstrongHelper(num/10,digits);
 }
 
 int isArmstrong(int num){
